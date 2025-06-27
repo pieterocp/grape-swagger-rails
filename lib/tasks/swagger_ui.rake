@@ -9,7 +9,7 @@ namespace :swagger_ui do
       Dir.mktmpdir 'swagger-ui' do |dir|
         puts "Cloning into #{dir} ..."
         # clone wordnik/swagger-ui
-        Git.clone 'git@github.com:swagger-api/swagger-ui.git', 'swagger-ui', path: dir, depth: 0
+        Git.clone 'git@github.com:swagger-api/swagger-ui.git', 'swagger-ui', path: dir, depth: 1
         # prune local files
         root = File.expand_path '../..', __dir__
         puts "Removing files from #{root} ..."
