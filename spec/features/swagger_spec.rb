@@ -33,7 +33,7 @@ describe 'Swagger' do
 
     it 'evaluates config options correctly' do
       visit '/swagger'
-      page_options = page.evaluate_script("$('html').data('swagger-options')").symbolize_keys
+      page_options = page.evaluate_script("document.documentElement.getAttribute('data-swagger-options')").symbolize_keys
       expect(page_options).to eq(@options.marshal_dump)
     end
 
@@ -45,7 +45,7 @@ describe 'Swagger' do
       end
 
       it 'adds headers' do
-        headers = page.evaluate_script('swaggerUi.api.clientAuthorizations')['authz']
+        headers = page.evaluate_script('ui.api.clientAuthorizations')['authz']
         expect(headers.select { |key| key.to_s.match(/^header/) }).not_to be_blank
         expect(headers.fetch('header_0', {}).fetch('name', {})).to eq GrapeSwaggerRails.options.headers.keys.first
         find_by_id('endpointListTogger_headers', visible: true).click
@@ -76,7 +76,7 @@ describe 'Swagger' do
       end
 
       it 'adds an Authorization header' do
-        headers = page.evaluate_script('swaggerUi.api.clientAuthorizations')['authz']
+        headers = page.evaluate_script('ui.api.clientAuthorizations')['authz']
         last_header = headers.fetch("header_#{headers.length - 1}", {})
         expect(last_header.slice('name', 'value'))
           .to eq('name' => 'Authorization', 'value' => 'Bearer token')
@@ -103,8 +103,8 @@ describe 'Swagger' do
       end
 
       it 'adds an Authorization header' do
-        page.execute_script("$('#input_apiKey').val('username:password')")
-        page.execute_script("$('#input_apiKey').trigger('change')")
+        page.execute_script("document.getElementById('input_apiKey').value = 'username:password';")
+        page.execute_script("document.getElementById('input_apiKey').dispatchEvent(new Event('change'))")
         find_by_id('endpointListTogger_headers', visible: true).click
         first('span[class="http_method"] a', visible: true).click
         click_button 'Try it out!'
@@ -122,8 +122,8 @@ describe 'Swagger' do
       end
 
       it 'adds an Authorization header' do
-        page.execute_script("$('#input_apiKey').val('token')")
-        page.execute_script("$('#input_apiKey').trigger('change')")
+        page.execute_script("document.getElementById('input_apiKey').value = 'token';")
+        page.execute_script("document.getElementById('input_apiKey').dispatchEvent(new Event('change'))")
         find_by_id('endpointListTogger_headers', visible: true).click
         first('span[class="http_method"] a', visible: true).click
         click_button 'Try it out!'
@@ -141,8 +141,8 @@ describe 'Swagger' do
       end
 
       it 'adds an Authorization header' do
-        page.execute_script("$('#input_apiKey').val('token')")
-        page.execute_script("$('#input_apiKey').trigger('change')")
+        page.execute_script("document.getElementById('input_apiKey').value = 'token';")
+        page.execute_script("document.getElementById('input_apiKey').dispatchEvent(new Event('change'))")
         find_by_id('endpointListTogger_headers', visible: true).click
         first('span[class="http_method"] a', visible: true).click
         click_button 'Try it out!'
@@ -159,8 +159,8 @@ describe 'Swagger' do
       end
 
       it 'adds an api_token query parameter' do
-        page.execute_script("$('#input_apiKey').val('dummy')")
-        page.execute_script("$('#input_apiKey').trigger('change')")
+        page.execute_script("document.getElementById('input_apiKey').value = 'token';")
+        page.execute_script("document.getElementById('input_apiKey').dispatchEvent(new Event('change'))")
         find_by_id('endpointListTogger_params', visible: true).click
         first('span[class="http_method"] a', visible: true).click
         click_button 'Try it out!'

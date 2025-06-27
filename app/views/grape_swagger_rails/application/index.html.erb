@@ -10,6 +10,17 @@
   <%= javascript_include_tag 'grape_swagger_rails/application.js' %>
 </head>
 <body>
+    <div id='header'>
+      <div class="swagger-ui-wrap">
+        <a id="logo" href="<%= GrapeSwaggerRails.options.app_url %>"><%= GrapeSwaggerRails.options.app_name %></a>
+
+        <form id='api_selector'>
+          <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
+          <div class='input'><input placeholder="<%= GrapeSwaggerRails.options.api_key_placeholder %>" id="input_apiKey" name="apiKey" type="text" value="<%= GrapeSwaggerRails.options.api_key_default_value %>"/></div>
+          <div class='input'><a id="explore" class="exploreBtn" href="#">Explore</a></div>
+        </form>
+      </div>
+    </div>
   <div id="swagger-ui"></div>
 
   <script type="text/javascript">
@@ -28,70 +39,36 @@
           <%= raw "headers.header_#{headers_count} = getApiKeyAuthorization();" %>
           <% end %>
 
-
-
-          // the following lines will be replaced by docker/configurator, when it runs in a docker-container
-          window.ui = SwaggerUIBundle({
+          window.swaggerUi = SwaggerUIBundle({
               url: options.app_url + options.url,
               dom_id: '#swagger-ui',
+              supportHeaderParams: true,
+              supportedSubmitMethods: options.supported_submit_methods || [],
               deepLinking: true,
               presets: [
                   SwaggerUIBundle.presets.apis,
                   SwaggerUIStandalonePreset
               ],
               plugins: [
-                  SwaggerUIBundle.plugins.DownloadUrl
+                  SwaggerUIBundle.plugins.DownloadUrl,
+                  SwaggerUIBundle.plugins.Auth,
+
               ],
               authorizations: headers,
-              layout: "StandaloneLayout"
-          });
-
-          //</editor-fold>
-      };
-
-  </script>
-  <script type="text/javascript">
-      document.addEventListener('DOMContentLoaded', function() {
-          var options = JSON.parse(document.documentElement.getAttribute('data-swagger-options'));
-
-          var headers = {};
-          <% GrapeSwaggerRails.options.headers.each_with_index do |(key, value), index| %>
-          <%=raw "headers.header_#{index} = new SwaggerClient.ApiKeyAuthorization('#{CGI.escapeHTML(key)}', '#{CGI.escapeHTML(value)}', 'header');" %>
-          <% end %>
-
-          <% if GrapeSwaggerRails.options.api_key_default_value.try(:strip).present? &&
-                GrapeSwaggerRails.options.headers['Authorization'].blank? %>
-          <% headers_count = GrapeSwaggerRails.options.headers.count %>
-          <%= raw "headers.header_#{headers_count} = getApiKeyAuthorization();" %>
-          <% end %>
-
-          window.swaggerUi = new SwaggerUiBundle({
-              url: options.app_url + options.url,
-              dom_id: "swagger-ui-container",
-              supportHeaderParams: true,
-              supportedSubmitMethods: options.supported_submit_methods || [],
-              authorizations: headers,
-              onComplete: function(swaggerApi, swaggerUi){
-                  if('console' in window) {
-                      console.log("Loaded SwaggerUI")
-                      console.log(swaggerApi);
-                      console.log(swaggerUi);
-                  }
-                  $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-              },
+              layout: "StandaloneLayout",
+              docExpansion: options.doc_expansion,
+              validatorUrl: options.validator_url,
+              apisSorter: "alpha",
               onFailure: function(data) {
                   if('console' in window) {
                       console.log("Unable to Load SwaggerUI");
                       console.log(data);
                   }
               },
-              docExpansion: options.doc_expansion,
-              validatorUrl: options.validator_url,
-              apisSorter: "alpha"
           });
 
           function getApiKeyAuthorization() {
-              var key = $('#input_apiKey')[0].value;
+              var key = document.getElementById('input_apiKey').value;
 
               if (key && key.trim() != "") {
                   if (options.api_auth == 'basic') {
@@ -105,6 +82,7 @@
               }
           }
 
+
           function addApiKeyAuthorization() {
               var apiKeyAuthorization = getApiKeyAuthorization();
               if (apiKeyAuthorization) {
@@ -112,11 +90,13 @@
               }
           }
 
-          $('#input_apiKey').change(addApiKeyAuthorization);
+          document.getElementById('input_apiKey').addEventListener('change', addApiKeyAuthorization);
 
           window.swaggerUi.load();
 
-      });
+          //</editor-fold>
+      };
+
   </script>
 </body>
 
