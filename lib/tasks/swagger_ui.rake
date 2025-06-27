@@ -23,21 +23,9 @@ namespace :swagger_ui do
         FileUtils.cp Dir.glob("#{root}/lib/javascripts/*.js"), "#{root}/app/assets/javascripts/grape_swagger_rails"
         # Generate application.js
         JAVASCRIPT_FILES = [
-          'jquery-1.8.0.min.js',
-          'jquery.slideto.min.js',
-          'jquery.wiggle.min.js',
-          'jquery.ba-bbq.min.js',
-          'handlebars-2.0.0.js',
-          'marked.js',
-          'lodash.min.js',
-          'backbone-min.js',
           'swagger-ui.js',
-          'highlight.9.1.0.pack.js',
-          'js-yaml.min.js',
-          'jsoneditor.min.js',
-          'object-assign-pollyfill.js',
-          'swagger-oauth.js',
-          'base64.js'
+          'swagger-ui-bundle.js',
+          'swagger-ui-standalone-preset.js'
         ].freeze
         javascript_files = Dir["#{root}/app/assets/javascripts/grape_swagger_rails/*.js"].map do |f|
           f.split('/').last
