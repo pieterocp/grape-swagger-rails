@@ -4,12 +4,12 @@ require 'git'
 
 namespace :swagger_ui do
   namespace :dist do
-    desc 'Update Swagger-UI from wordnik/swagger-ui.'
+    desc 'Update Swagger-UI from swagger-api/swagger-ui.'
     task :update do
       Dir.mktmpdir 'swagger-ui' do |dir|
         puts "Cloning into #{dir} ..."
-        # clone wordnik/swagger-ui
-        Git.clone 'git@github.com:wordnik/swagger-ui.git', 'swagger-ui', path: dir, depth: 0
+        # clone swagger-api/swagger-ui
+        Git.clone 'git@github.com:swagger-api/swagger-ui.git', 'swagger-ui', path: dir, depth: 1, branch: 'v2.2.10'
         # prune local files
         root = File.expand_path '../..', __dir__
         puts "Removing files from #{root} ..."
@@ -28,15 +28,18 @@ namespace :swagger_ui do
           'jquery.slideto.min.js',
           'jquery.wiggle.min.js',
           'jquery.ba-bbq.min.js',
-          'handlebars-2.0.0.js',
+          'handlebars-4.0.5.js',
           'marked.js',
           'lodash.min.js',
+          'es5-shim.js',
           'backbone-min.js',
           'swagger-ui.min.js',
+          'highlight.9.1.0.pack_extended.js',
           'highlight.9.1.0.pack.js',
           'js-yaml.min.js',
           'jsoneditor.min.js',
           'object-assign-pollyfill.js',
+          'sanitize-html.min.js',
           'swagger-oauth.js',
           'base64.js'
         ].freeze
@@ -63,6 +66,9 @@ namespace :swagger_ui do
         # Generate application.js
         CSS_FILES = [
           'reset.css',
+          'print.css',
+          'style.css',
+          'typography.css',
           'screen.css'
         ].freeze
         css_files = Dir["#{root}/app/assets/stylesheets/grape_swagger_rails/*.css"].map { |f|
