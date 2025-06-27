@@ -4,12 +4,12 @@ require 'git'
 
 namespace :swagger_ui do
   namespace :dist do
-    desc 'Update Swagger-UI from wordnik/swagger-ui.'
+    desc 'Update Swagger-UI from swagger-api/swagger-ui.'
     task :update do
       Dir.mktmpdir 'swagger-ui' do |dir|
         puts "Cloning into #{dir} ..."
         # clone wordnik/swagger-ui
-        Git.clone 'git@github.com:wordnik/swagger-ui.git', 'swagger-ui', path: dir, depth: 0
+        Git.clone 'git@github.com:swagger-api/swagger-ui.git', 'swagger-ui', path: dir, depth: 0
         # prune local files
         root = File.expand_path '../..', __dir__
         puts "Removing files from #{root} ..."
@@ -40,9 +40,9 @@ namespace :swagger_ui do
           'swagger-oauth.js',
           'base64.js'
         ].freeze
-        javascript_files = Dir["#{root}/app/assets/javascripts/grape_swagger_rails/*.js"].map { |f|
+        javascript_files = Dir["#{root}/app/assets/javascripts/grape_swagger_rails/*.js"].map do |f|
           f.split('/').last
-        } - ['application.js']
+        end - ['application.js']
         (javascript_files - JAVASCRIPT_FILES).each do |filename|
           puts "WARNING: add #{filename} to swagger_ui.rake"
         end
@@ -65,9 +65,9 @@ namespace :swagger_ui do
           'reset.css',
           'screen.css'
         ].freeze
-        css_files = Dir["#{root}/app/assets/stylesheets/grape_swagger_rails/*.css"].map { |f|
+        css_files = Dir["#{root}/app/assets/stylesheets/grape_swagger_rails/*.css"].map do |f|
           f.split('/').last
-        } - ['application.css']
+        end - ['application.css']
         (css_files - CSS_FILES).each do |filename|
           puts "WARNING: add #{filename} to swagger_ui.rake"
         end
