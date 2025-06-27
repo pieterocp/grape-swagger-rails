@@ -20,7 +20,8 @@ namespace :swagger_ui do
         FileUtils.cp_r "#{dir}/swagger-ui/dist", "#{root}/app/assets/javascripts/grape_swagger_rails"
         # Generate application.js
         JAVASCRIPT_FILES = [
-          'swagger-ui.js',
+          'swagger-ui-bundle.js',
+          'swagger-ui-standalone-preset.js',
         ].freeze
         javascript_files = Dir["#{root}/app/assets/javascripts/grape_swagger_rails/*.js"].map { |f|
           f.split('/').last
