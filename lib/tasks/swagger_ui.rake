@@ -17,9 +17,8 @@ namespace :swagger_ui do
         # Javascripts
         puts 'Copying Javascripts ...'
         FileUtils.rm_r "#{root}/app/assets/javascripts/grape_swagger_rails"
-        FileUtils.cp_r "#{dir}/swagger-ui/dist/lib", "#{root}/app/assets/javascripts"
-        FileUtils.mv "#{root}/app/assets/javascripts/lib", "#{root}/app/assets/javascripts/grape_swagger_rails"
-        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/swagger-ui.min.js"),
+        FileUtils.cp_r "#{dir}/swagger-ui/dist", "#{root}/app/assets/javascripts/grape_swagger_rails"
+        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/swagger-ui.js"),
                        "#{root}/app/assets/javascripts/grape_swagger_rails"
         FileUtils.cp Dir.glob("#{root}/lib/javascripts/*.js"), "#{root}/app/assets/javascripts/grape_swagger_rails"
         # Generate application.js
@@ -32,7 +31,7 @@ namespace :swagger_ui do
           'marked.js',
           'lodash.min.js',
           'backbone-min.js',
-          'swagger-ui.min.js',
+          'swagger-ui.js',
           'highlight.9.1.0.pack.js',
           'js-yaml.min.js',
           'jsoneditor.min.js',
@@ -58,12 +57,11 @@ namespace :swagger_ui do
         puts 'Copying Stylesheets ...'
         repo.remove 'app/assets/stylesheets/grape_swagger_rails', recursive: true
         FileUtils.mkdir_p "#{root}/app/assets/stylesheets/grape_swagger_rails"
-        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/css/**/*"), "#{root}/app/assets/stylesheets/grape_swagger_rails"
+        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/*.css"), "#{root}/app/assets/stylesheets/grape_swagger_rails"
         repo.add 'app/assets/stylesheets/grape_swagger_rails'
         # Generate application.js
         CSS_FILES = [
-          'reset.css',
-          'screen.css'
+          'index.css'
         ].freeze
         css_files = Dir["#{root}/app/assets/stylesheets/grape_swagger_rails/*.css"].map do |f|
           f.split('/').last
@@ -76,12 +74,12 @@ namespace :swagger_ui do
         end
         # rewrite screen.css into screen.css.erb with dynamic image paths
         File.open "#{root}/app/assets/stylesheets/grape_swagger_rails/screen.css.erb", 'w+' do |file|
-          contents = File.read "#{root}/app/assets/stylesheets/grape_swagger_rails/screen.css"
+          contents = File.read "#{root}/app/assets/stylesheets/grape_swagger_rails/index.css"
           contents.gsub!(%r{url\(('*).*/(?<filename>[\w.]*)('*)\)}) do |_match|
             "url(<%= image_path('grape_swagger_rails/#{$LAST_MATCH_INFO[:filename]}') %>)"
           end
           file.write contents
-          FileUtils.rm "#{root}/app/assets/stylesheets/grape_swagger_rails/screen.css"
+          FileUtils.rm "#{root}/app/assets/stylesheets/grape_swagger_rails/index.css"
         end
         File.open "#{root}/app/assets/stylesheets/grape_swagger_rails/application.css", 'w+' do |file|
           file.write "/*\n"
@@ -95,7 +93,7 @@ namespace :swagger_ui do
         puts 'Copying Images ...'
         repo.remove 'app/assets/images/grape_swagger_rails', recursive: true
         FileUtils.mkdir_p "#{root}/app/assets/images/grape_swagger_rails"
-        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/images/**/*"), "#{root}/app/assets/images/grape_swagger_rails"
+        FileUtils.cp_r Dir.glob("#{dir}/swagger-ui/dist/**.png"), "#{root}/app/assets/images/grape_swagger_rails"
         repo.add 'app/assets'
       end
     end
