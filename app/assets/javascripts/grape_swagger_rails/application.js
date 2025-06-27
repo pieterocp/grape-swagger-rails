@@ -6,7 +6,7 @@
 //= require ./marked
 //= require ./lodash.min
 //= require ./backbone-min
-//= require ./swagger-ui.min
+//= require ./swagger-ui
 //= require ./highlight.9.1.0.pack
 //= require ./js-yaml.min
 //= require ./jsoneditor.min
