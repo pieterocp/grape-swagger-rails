@@ -33,7 +33,7 @@ describe 'Swagger' do
 
     it 'evaluates config options correctly' do
       visit '/swagger'
-      page_options = page.evaluate_script("document.documentElement.getAttribute('data-swagger-options')").symbolize_keys
+      page_options = page.evaluate_script("document.documentElement.getAttribute('data-swagger-options')")
       expect(page_options).to eq(@options.marshal_dump)
     end
 
@@ -231,7 +231,7 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI docExpansion with list' do
-          expect(page.evaluate_script('window.swaggerUi.options.docExpansion == "list"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().docExpansion == "list"')).to be true
         end
       end
 
@@ -242,7 +242,7 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI docExpansion with full' do
-          expect(page.evaluate_script('window.swaggerUi.options.docExpansion == "full"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().docExpansion == "full"')).to be true
         end
       end
 
@@ -252,7 +252,7 @@ describe 'Swagger' do
         end
 
         it 'defaults SwaggerUI docExpansion' do
-          expect(page.evaluate_script('window.swaggerUi.options.docExpansion == "none"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().docExpansion == "none"')).to be true
         end
       end
     end
@@ -265,7 +265,7 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI supportedSubmitMethods with all operations' do
-          expect(page.evaluate_script('window.swaggerUi.options.supportedSubmitMethods.length')).to eq 5
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().supportedSubmitMethods.length')).to eq 5
           find_by_id('endpointListTogger_params', visible: true).click
           first('span[class="http_method"] a', visible: true).click
           expect(page).to have_button('Try it out!', disabled: false)
@@ -279,7 +279,7 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI supportedSubmitMethods with some operations' do
-          expect(page.evaluate_script('window.swaggerUi.options.supportedSubmitMethods.length')).to eq 1
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().supportedSubmitMethods.length')).to eq 1
           find_by_id('endpointListTogger_params', visible: true).click
           first('span[class="http_method"] a', visible: true).click
           expect(page).to have_no_button('Try it out!')
@@ -293,7 +293,7 @@ describe 'Swagger' do
         end
 
         it 'clears SwaggerUI supportedSubmitMethods' do
-          expect(page.evaluate_script('window.swaggerUi.options.supportedSubmitMethods.length')).to eq 0
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().supportedSubmitMethods.length')).to eq 0
           find_by_id('endpointListTogger_params', visible: true).click
           first('span[class="http_method"] a', visible: true).click
           expect(page).to have_no_button('Try it out!')
@@ -306,7 +306,7 @@ describe 'Swagger' do
         end
 
         it 'defaults SwaggerUI supportedSubmitMethods' do
-          expect(page.evaluate_script('window.swaggerUi.options.supportedSubmitMethods.length')).to eq 5
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().supportedSubmitMethods.length')).to eq 5
           find_by_id('endpointListTogger_params', visible: true).click
           first('span[class="http_method"] a', visible: true).click
           expect(page).to have_button('Try it out!', disabled: false)
@@ -322,8 +322,8 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI validatorUrl to null' do
-          expect(page.evaluate_script('window.swaggerUi.options.validatorUrl === null && ' \
-                                      'typeof window.swaggerUi.options.validatorUrl === "object"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().validatorUrl === null && ' \
+                                      'typeof window.swaggerUi.getConfigs().validatorUrl === "object"')).to be true
         end
       end
 
@@ -334,7 +334,7 @@ describe 'Swagger' do
         end
 
         it 'sets SwaggerUI validatorUrl to expected url' do
-          expect(page.evaluate_script('window.swaggerUi.options.validatorUrl === "http://www.example.com/"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().validatorUrl === "http://www.example.com/"')).to be true
         end
       end
 
@@ -344,8 +344,8 @@ describe 'Swagger' do
         end
 
         it 'defaults SwaggerUI validatorUrl' do
-          expect(page.evaluate_script('window.swaggerUi.options.validatorUrl === undefined && ' \
-                                      'typeof window.swaggerUi.options.validatorUrl === "undefined"')).to be true
+          expect(page.evaluate_script('window.swaggerUi.getConfigs().validatorUrl === undefined && ' \
+                                      'typeof window.swaggerUi.getConfigs().validatorUrl === "undefined"')).to be true
         end
       end
     end

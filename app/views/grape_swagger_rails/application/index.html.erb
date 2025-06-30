@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id='header'>
-      <div class="swagger-ui-wrap">
+      <div class="swagger-ui">
         <a id="logo" href="<%= GrapeSwaggerRails.options.app_url %>"><%= GrapeSwaggerRails.options.app_name %></a>
 
         <form id='api_selector'>
@@ -73,12 +73,13 @@
               if (key && key.trim() != "") {
                   if (options.api_auth == 'basic') {
                       key = "Basic " + Base64.encode(key);
+
                   } else if (options.api_auth == 'bearer') {
                       key = "Bearer " + key;
                   } else if (options.api_auth == 'token') {
                       key = 'Token token="' + key + '"';
                   }
-                  return new SwaggerClient.ApiKeyAuthorization(options.api_key_name, key, options.api_key_type);
+                  return (options.api_key_name, key, options.api_key_type);
               }
           }
 
@@ -86,7 +87,7 @@
           function addApiKeyAuthorization() {
               var apiKeyAuthorization = getApiKeyAuthorization();
               if (apiKeyAuthorization) {
-                  window.swaggerUi.api.clientAuthorizations.add("key", apiKeyAuthorization);
+                  window.swaggerUi.preauthorizeBasic("key", apiKeyAuthorization);
               }
           }
 
