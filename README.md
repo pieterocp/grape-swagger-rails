@@ -211,7 +211,7 @@ By default, these options are false.
 
 ### Updating Swagger UI from Dist
 
-To update Swagger UI from its [distribution](https://github.com/wordnik/swagger-ui), run `bundle exec rake swagger_ui:dist:update`. Examine the changes carefully.
+To update Swagger UI from its [distribution](https://github.com/swagger-api/swagger-ui), run `bundle exec rake swagger_ui:dist:update`. Examine the changes carefully.
 
 NOTE: This action should be run part of this gem (not your application). In case if you want to
 make it up-to-date, clone the repo, run the rake task, examine the diff, fix any bugs, make sure
